@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./data/chroma_data:/chroma/.chroma/index
+
+  backend:
+    build: ./backend
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - chromadb
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend

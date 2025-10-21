@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pdfminer.six
+docx2txt
+chromadb
+pydantic
+python-multipart
+google-generativeai
+tiktoken
+requests
