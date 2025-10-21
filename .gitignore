@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Environments
+.env
+.env.*
+
+# Data & artefacts
+data/
+!data/raw_documents/
+
+# VSCode/IDE
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# MacOS/Windows
+.DS_Store
+Thumbs.db
+
+# Docker artefacts
+*.bak
+*.tmp
+
+# Python virtual envs
+venv/
+.envrc
+
+# Logs
+*.log
+
+# node
+node_modules/
+
+# Backup files
+*~
+*.swp
+*.swo
