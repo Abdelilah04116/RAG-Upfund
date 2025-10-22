@@ -96,3 +96,5 @@ curl -X POST http://localhost:8000/upload \
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-black)](https://github.com/abdelilah04116)
 [![Portfolio](https://img.shields.io/badge/Portfolio-Visit-orange)](https://abdelilah04116.github.io/)
 
+- **Pour toute demande ou information supplémentaire, n'hésitez pas à me contacter.**
+
