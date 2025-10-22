@@ -1,10 +1,10 @@
-# 🔥 RAG Demo - FastAPI + Gemini + ChromaDB + Streamlit
+# 🔥 RAG Demo - FastAPI + Gemini + ChromaDB + Streamlit pour Upfund 
 
 Ce projet déploie une pipeline RAG « Retrieval-Augmented Generation » utilisable via API et interface utilisateur pour interroger vos documents (PDF, DOCX, TXT) avec l’IA Gemini.
 
 ---
 
-## 🚀 Démarrage rapide
+##  Démarrage rapide
 
 1. **Configurer la clé Gemini**  
    Copier `.env.example` → `.env` et renseigner `GEMINI_API_KEY`.
@@ -20,7 +20,7 @@ Ce projet déploie une pipeline RAG « Retrieval-Augmented Generation » uti
 
 ---
 
-## 📦 Structure
+##  Structure
 
 ```
 ├── backend/     # FastAPI: RAG, Embeddings, API
@@ -34,7 +34,7 @@ Ce projet déploie une pipeline RAG « Retrieval-Augmented Generation » uti
 
 ---
 
-## 🛠 Fonctionnalités
+##  Fonctionnalités
 
 - Upload & indexation de : PDF / DOCX / TXT
 - Chunking (300–700 tokens)
@@ -46,7 +46,7 @@ Ce projet déploie une pipeline RAG « Retrieval-Augmented Generation » uti
 
 ---
 
-## 🔗 Exemples d’appels API
+##  Exemples d’appels API
 
 ### Question (POST /ask)
 ```bash
@@ -73,12 +73,12 @@ curl -X POST http://localhost:8000/upload \
 
 ---
 
-## 💡 À propos du pipeline RAG
+##  À propos du pipeline RAG
 
 1. **Parsing** : Extraction texte PDF/DOCX/TXT
 2. **Nettoyage** : Retrait des artefacts, normalisation UTF-8
 3. **Chunking** : Morceaux de 300–700 tokens (par phrase)
-4. **Embeddings** : Via Gemini
+4. **Embeddings** : Via all-MiniLM-L6-v2
 5. **Stockage** : Vecteurs dans ChromaDB
 6. **Retrieval** : Recherche les passages les plus pertinents
 7. **Synthesis** : Génère la réponse finale avec Gemini
@@ -86,3 +86,13 @@ curl -X POST http://localhost:8000/upload \
 ---
 
 *Déployez, chargez vos documents, et posez toutes vos questions !*
+
+--------
+## information sur l'Auteur 
+**Abdelilah Ourti**
+
+[![Email](https://img.shields.io/badge/Email-Contact-red)](mailto:abdelilahourti@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/abdelilah-ourti-a529412a8)
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-black)](https://github.com/abdelilah04116)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-orange)](https://abdelilah04116.github.io/)
+
