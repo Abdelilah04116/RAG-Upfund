@@ -3,8 +3,9 @@ from typing import List, Dict, Tuple, Any
 import chromadb
 from chromadb.config import Settings
 import google.generativeai as genai
-from .utils import EXTENSION_TO_PARSER, sanitize_text, chunk_text
-from .models import Source
+from sentence_transformers import SentenceTransformer
+from utils import EXTENSION_TO_PARSER, sanitize_text, chunk_text
+from models import Source
 
 DATA_DIR = os.getenv("DATA_DIR", "./data")
 RAW_DOCS_DIR = os.path.join(DATA_DIR, "raw_documents")
@@ -22,7 +23,18 @@ class RAGEngine:
         )
         self.collection = self.chroma_client.get_or_create_collection(name=COLLECTION_NAME)
         genai.configure(api_key=gemini_api_key)
-        self.model = genai.GenerativeModel("gemini-pro")
+        
+        # Debug: Lister les modèles disponibles
+        try:
+            models = genai.list_models()
+            print(f"[DEBUG] Modèles disponibles: {[m.name for m in models]}")
+        except Exception as e:
+            print(f"[DEBUG] Erreur list_models: {e}")
+        
+        # Configuration simple pour Gemini (modèle le plus récent)
+        self.llm_model = genai.GenerativeModel("gemini-2.5-flash")
+        # Modèle d'embedding local all-MiniLM-L6-v2
+        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
     
     def index_documents(self):
         doc_paths = []
@@ -53,22 +65,21 @@ class RAGEngine:
             )
 
     def embed_chunks(self, chunks: List[str]) -> List[List[float]]:
-        # Gemini supports embedding via the `embed_content` method
-        embeddings = []
-        for chunk in chunks:
-            try:
-                emb = self.model.embed_content(chunk, task_type="retrieval_document")["embedding"]
-            except Exception as e:
-                print(f"[WARN] Embedding failed: {e}")
-                emb = [0.0] * 768
-            embeddings.append(emb)
-        return embeddings
+        try:
+            # Utilisation du modèle local all-MiniLM-L6-v2
+            embeddings = self.embedding_model.encode(chunks).tolist()
+            return embeddings
+        except Exception as e:
+            print(f"[WARN] Embedding failed: {e}")
+            # Fallback: vecteurs zéros (384 dimensions pour all-MiniLM-L6-v2)
+            return [[0.0] * 384 for _ in chunks]
 
     def search(self, query: str, k=4) -> List[Dict]:
         try:
-            emb = self.model.embed_content(query, task_type="retrieval_query")["embedding"]
+            # Utilisation du modèle local pour la requête
+            query_embedding = self.embedding_model.encode([query]).tolist()[0]
             results = self.collection.query(
-                query_embeddings=[emb],
+                query_embeddings=[query_embedding],
                 n_results=k,
                 include=["documents", "metadatas"]
             )
@@ -91,8 +102,22 @@ class RAGEngine:
             "Synthétise une réponse précise, cite tes sources si possible."
         )
         try:
-            response = self.model.generate_content(prompt)
+            print(f"[DEBUG] Tentative de génération avec Gemini...")
+            print(f"[DEBUG] Prompt envoyé: {prompt[:200]}...")
+            
+            # Test simple d'abord
+            test_response = self.llm_model.generate_content("Bonjour, peux-tu me dire bonjour ?")
+            print(f"[DEBUG] Test Gemini réussi: {test_response.text[:50]}...")
+            
+            # Maintenant la vraie génération
+            response = self.llm_model.generate_content(prompt)
+            print(f"[DEBUG] Réponse Gemini reçue: {response.text[:100]}...")
             return response.text
         except Exception as e:
-            print(f"[WARN] Generation failed: {e}")
-            return "Une erreur est survenue lors de la génération de la réponse."
+            print(f"[ERROR] Generation failed: {e}")
+            print(f"[ERROR] Type d'erreur: {type(e)}")
+            print(f"[ERROR] Détails: {str(e)}")
+            # Fallback: réponse basique basée sur les sources
+            if sources:
+                return f"Basé sur les documents trouvés, voici les informations pertinentes :\n\n" + "\n\n".join([f"• {src['chunk'][:200]}..." for src in sources[:2]])
+            return "Aucune réponse générée par Gemini, mais des sources ont été trouvées."

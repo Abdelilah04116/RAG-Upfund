@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os, shutil, threading, json
 
-from .models import AskRequest, AskResponse, Source, UploadResponse, QAHistoryItem
-from .rag_engine import RAGEngine, RAW_DOCS_DIR
+from models import AskRequest, AskResponse, Source, UploadResponse, QAHistoryItem
+from rag_engine import RAGEngine, RAW_DOCS_DIR
 from dotenv import load_dotenv
 
 load_dotenv()

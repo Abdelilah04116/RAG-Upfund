@@ -8,3 +8,4 @@ python-multipart
 google-generativeai
 tiktoken
 requests
+sentence-transformers

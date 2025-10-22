@@ -23,12 +23,12 @@ def check_backend():
     return False
 
 def main():
-    st.title("🔎💡 Questionnez vos documents avec Gemini")
+    st.title("Questionnez vos documents avec Gemini")
     if not check_backend():
         st.error("Le backend FastAPI n’est pas joignable.")
         st.stop()
 
-    with st.expander("📤 Uploader un document", expanded=False):
+    with st.expander("Uploader un document", expanded=False):
         uploaded_file = st.file_uploader(
             "Sélectionnez un document (PDF, DOCX, TXT)", type=["pdf", "docx", "txt"]
         )
@@ -41,18 +41,18 @@ def main():
                 st.error(f"Erreur : {resp.json().get('detail','')}")
 
     st.markdown("---")
-    st.subheader("🤖 Posez votre question…")
+    st.subheader("Posez votre question…")
 
     question = st.text_input("Votre question", key="question_input")
 
     if st.button("Envoyer", type="primary") and question.strip():
-        with st.spinner("Gemini réfléchit..."):
+        with st.spinner("Traitement en cours..."):
             r = requests.post(ASK_ENDPOINT, json={"question": question})
             if r.status_code == 200:
                 data = r.json()
-                st.markdown("### 📝 Réponse")
+                st.markdown("### Réponse")
                 st.success(data["answer"])
-                st.markdown("### 📚 Sources")
+                st.markdown("### Sources")
                 for src in data.get("sources", []):
                     with st.expander(src["title"]):
                         st.write(src["chunk"])
@@ -60,7 +60,7 @@ def main():
                 st.error("Erreur lors de la requête.")
 
     st.markdown("---")
-    st.markdown("### 🧾 Historique de vos questions")
+    st.markdown("### Historique de vos questions")
     hist = []
     try:
         r = requests.get(HIST_ENDPOINT)
@@ -79,7 +79,7 @@ def main():
 
     st.markdown("---")
     st.markdown(
-        "<small>Propulsé par FastAPI, ChromaDB, Gemini ✨</small>", unsafe_allow_html=True
+        "<small>Propulsé par FastAPI, ChromaDB, Gemini</small>", unsafe_allow_html=True
     )
 
 if __name__ == "__main__":
